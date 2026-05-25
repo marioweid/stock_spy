@@ -1,0 +1,11 @@
+services:
+  stock-spy:
+    build: .
+    restart: unless-stopped
+    # Secrets (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, GEMINI_API_KEY) come from .env.
+    env_file: .env
+    volumes:
+      # Edit the watchlist on the host; no rebuild needed.
+      - ./config.toml:/app/config.toml:ro
+      # SQLite state survives restarts.
+      - ./data:/app/data

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Yahoo! Finance: AAPL News</title>
+    <link>https://finance.yahoo.com/quote/AAPL</link>
+    <item>
+      <title>Apple unveils new product line</title>
+      <link>https://finance.yahoo.com/news/apple-unveils-1.html</link>
+      <description>Apple announced a refresh of its lineup today.</description>
+      <pubDate>Mon, 26 May 2026 13:30:00 +0000</pubDate>
+      <guid>apple-unveils-1</guid>
+    </item>
+    <item>
+      <title>Analysts react to earnings</title>
+      <link>https://finance.yahoo.com/news/analysts-react-2.html</link>
+      <description>Mixed reactions following the latest quarterly report.</description>
+      <pubDate>Mon, 26 May 2026 09:00:00 +0000</pubDate>
+      <guid>analysts-react-2</guid>
+    </item>
+  </channel>
+</rss>

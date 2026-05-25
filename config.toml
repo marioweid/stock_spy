@@ -1,0 +1,20 @@
+# Stock Spy watchlist and runtime settings.
+# Secrets (Telegram token, chat id, Gemini key) live in .env — never here.
+
+poll_interval_hours = 3.0
+db_path = "data/stock_spy.sqlite3"
+gemini_model = "gemini-2.5-flash"
+
+[[subscriptions]]
+ticker = "BRK-B"
+threshold_pct = 3.0
+notes = "Berkshire Hathaway"
+
+[[subscriptions]]
+ticker = "IWDA.AS"
+threshold_pct = 3.0
+notes = "iShares MSCI World"
+
+[[subscriptions]]
+ticker = "AAPL"
+threshold_pct = 4.0

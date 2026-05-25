@@ -1,0 +1,43 @@
+[project]
+name = "stock-spy"
+version = "0.1.0"
+description = "Monitor a stock watchlist and push price/news alerts to Telegram"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "apscheduler>=3.11.2",
+    "feedparser>=6.0.12",
+    "pydantic-ai-slim[google]>=1.102.0",
+    "pydantic-settings>=2.14.1",
+    "yfinance>=1.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    "ruff>=0.15.14",
+    "ty>=0.0.39",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "stock_spy"
+module-root = ""
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ty.rules]
+possibly-unresolved-reference = "error"
