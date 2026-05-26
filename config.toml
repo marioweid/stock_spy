@@ -5,6 +5,20 @@ poll_interval_hours = 3.0
 db_path = "data/stock_spy.sqlite3"
 gemini_model = "gemini-2.5-flash"
 
+# Your real portfolio. Used for protection alerts (what you own) and to size swing
+# trades from your cash. This file is gitignored-sensitive — keep real holdings local.
+[portfolio]
+cash = 10000.0          # cash available to deploy on new swing trades
+base_currency = "EUR"
+risk_per_trade_pct = 1.5  # percent of cash risked on a single swing trade
+max_position_pct = 20.0   # cap on cash committed to one position
+
+# What you own. Add one block per position. avg_cost is the price you paid per share.
+[[portfolio.holdings]]
+ticker = "BRK-B"
+shares = 10
+avg_cost = 400.0
+
 [[subscriptions]]
 ticker = "BRK-B"
 threshold_pct = 3.0
