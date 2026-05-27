@@ -1,0 +1,31 @@
+# Signal Spy watchlist and runtime settings.
+# Secrets (Telegram token, chat id, Gemini key) live in .env — never here.
+
+poll_interval_hours = 3.0
+db_path = "data/signal_spy.sqlite3"
+gemini_model = "gemini-2.5-flash"
+
+# Your real portfolio. Used for protection alerts on what you own.
+# Keep real holdings local — this file is sensitive.
+[portfolio]
+base_currency = "EUR"
+
+# What you own. Add one block per position. avg_cost is the price you paid per share.
+[[portfolio.holdings]]
+ticker = "BRK-B"
+shares = 10
+avg_cost = 400.0
+
+[[subscriptions]]
+ticker = "BRK-B"
+threshold_pct = 3.0
+notes = "Berkshire Hathaway"
+
+[[subscriptions]]
+ticker = "IWDA.AS"
+threshold_pct = 3.0
+notes = "iShares MSCI World"
+
+[[subscriptions]]
+ticker = "AAPL"
+threshold_pct = 4.0

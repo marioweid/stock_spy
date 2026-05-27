@@ -13,12 +13,14 @@ COPY pyproject.toml uv.lock README.md ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project
 
-# Install the project itself.
-COPY stock_spy ./stock_spy
+# Install the project itself (shared core + the signal monitor + the swing scanner).
+COPY spy_core ./spy_core
+COPY signal_spy ./signal_spy
+COPY swing_spy ./swing_spy
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-# config.toml and the data/ volume are mounted at runtime (see compose.yaml).
-CMD ["python", "-m", "stock_spy"]
+# config files and the data/ volume are mounted at runtime; compose sets each service's command.
+CMD ["python", "-m", "signal_spy", "monitor"]

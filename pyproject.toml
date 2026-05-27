@@ -1,16 +1,21 @@
 [project]
-name = "stock-spy"
+name = "spy-tools"
 version = "0.1.0"
-description = "Monitor a stock watchlist and push price/news alerts to Telegram"
+description = "Telegram alerting tools: portfolio signals (signal_spy) and a swing scanner (swing_spy)"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "apscheduler>=3.11.2",
     "feedparser>=6.0.12",
+    "pandas>=2.2.0",
     "pydantic-ai-slim[google]>=1.102.0",
     "pydantic-settings>=2.14.1",
     "yfinance>=1.4.0",
 ]
+
+[project.scripts]
+signal-spy = "signal_spy.__main__:main"
+swing-spy = "swing_spy.__main__:main"
 
 [dependency-groups]
 dev = [
@@ -25,7 +30,7 @@ requires = ["uv_build>=0.11.7,<0.12"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
-module-name = "stock_spy"
+module-name = ["spy_core", "signal_spy", "swing_spy"]
 module-root = ""
 
 [tool.ruff]

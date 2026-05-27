@@ -1,11 +1,23 @@
 services:
-  stock-spy:
+  # Portfolio guardian: price/news/protection alerts on what you own.
+  signal-spy:
     build: .
     restart: unless-stopped
+    command: ["python", "-m", "signal_spy", "monitor"]
     # Secrets (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, GEMINI_API_KEY) come from .env.
     env_file: .env
     volumes:
       # Edit the watchlist on the host; no rebuild needed.
-      - ./config.toml:/app/config.toml:ro
+      - ./signal_config.toml:/app/signal_config.toml:ro
       # SQLite state survives restarts.
+      - ./data:/app/data
+
+  # Market scanner: sweeps the universe for swing-trade candidates and alerts on them.
+  swing-spy:
+    build: .
+    restart: unless-stopped
+    command: ["python", "-m", "swing_spy", "scan"]
+    env_file: .env
+    volumes:
+      - ./swing_config.toml:/app/swing_config.toml:ro
       - ./data:/app/data
