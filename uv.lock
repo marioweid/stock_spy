@@ -930,12 +930,13 @@ wheels = [
 ]
 
 [[package]]
-name = "stock-spy"
+name = "spy-tools"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "apscheduler" },
     { name = "feedparser" },
+    { name = "pandas" },
     { name = "pydantic-ai-slim", extra = ["google"] },
     { name = "pydantic-settings" },
     { name = "yfinance" },
@@ -953,6 +954,7 @@ dev = [
 requires-dist = [
     { name = "apscheduler", specifier = ">=3.11.2" },
     { name = "feedparser", specifier = ">=6.0.12" },
+    { name = "pandas", specifier = ">=2.2.0" },
     { name = "pydantic-ai-slim", extras = ["google"], specifier = ">=1.102.0" },
     { name = "pydantic-settings", specifier = ">=2.14.1" },
     { name = "yfinance", specifier = ">=1.4.0" },

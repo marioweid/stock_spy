@@ -1,0 +1,17 @@
+# Swing Spy scanner settings. Secrets (Telegram token, chat id, Gemini key) live in .env.
+
+poll_interval_hours = 6.0
+db_path = "data/swing_spy.sqlite3"
+gemini_model = "gemini-2.5-flash"
+
+# Position sizing. Each candidate is sized so a stop-out loses ~risk_per_trade_pct of this
+# balance; the position is also capped at max_position_pct of it. Edit to your real number.
+account_balance = 10000.0
+risk_per_trade_pct = 1.0   # risk ~1% of the account per trade
+max_position_pct = 50.0    # never commit more than this share of the account to one idea
+min_risk_reward = 1.5      # reject setups whose reward-to-risk is below this
+
+# The scanned market. Known indexes: "DAX40", "SP500". Add one-off symbols to extra_tickers.
+[universe]
+indexes = ["DAX40", "SP500"]
+extra_tickers = []

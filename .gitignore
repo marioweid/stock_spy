@@ -12,3 +12,6 @@ wheels/
 # Secrets and local state
 .env
 data/
+
+swing_config.toml
+signal_config.toml
