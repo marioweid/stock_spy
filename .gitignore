@@ -13,6 +13,7 @@ wheels/
 .env
 data/
 .superpowers/
+.worktrees/
 
 swing_config.toml
 signal_config.toml
