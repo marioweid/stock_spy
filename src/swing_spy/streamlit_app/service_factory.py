@@ -13,9 +13,8 @@ from swing_spy.trade_lifecycle import TradeLifecycleService
 from swing_spy.trade_store import TradeStore
 
 
-@st.cache_resource
 def get_lifecycle_service(config_path: str = str(DEFAULT_CONFIG_PATH)) -> TradeLifecycleService:
-    """Return a cached lifecycle service for the configured dashboard database."""
+    """Return a lifecycle service for the configured dashboard database."""
     config = _load_dashboard_config(Path(config_path))
     return TradeLifecycleService(TradeStore(config.db_path))
 
