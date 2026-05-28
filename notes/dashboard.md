@@ -1,4 +1,4 @@
-This is a comprehensive, production-grade **Product Requirements Document (PRD) and Technical Specification** designed to give an advanced LLM like Claude 3.5 Sonnet or Claude 4 the exact "superpowers" it needs to write clean, integrated code for your MVP.
+This is a comprehensive, production-grade **Product Requirements Document (PRD) and Technical Specification** designed to give an advanced LLM like Claude 3.5 Sonnet or Claude 4 the context it needs to write clean, integrated code for your MVP.
 
 It fuses your existing **Signal Agent** architecture with the strict risk management rules, edge-case protocols, and performance metrics we have mapped out.
 
