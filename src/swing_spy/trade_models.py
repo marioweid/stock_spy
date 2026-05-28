@@ -7,9 +7,9 @@ used by FastAPI, a React frontend, or CLI tools.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Self
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 CandidateStatus = Literal["ACTIVE", "SKIPPED_UNTIL", "EXECUTED"]
 PositionStatus = Literal[
@@ -109,7 +109,16 @@ class ClosedTrade(BaseModel):
     gross_pnl: float
     note: str = ""
 
+    @model_validator(mode="after")
+    def validate_exit_time(self) -> Self:
+        """Ensure the trade cannot close before it opens."""
+        if self.exited_at < self.opened_at:
+            raise ValueError("Exit time cannot be before open time.")
+        return self
+
 
 def gross_pnl(position: OpenPosition, *, exit_price: float, shares: int) -> float:
     """Return gross P/L for a long position using actual entry and exit values."""
+    if shares <= 0 or shares > position.shares:
+        raise ValueError("Shares must be between 1 and the open position share count.")
     return round((exit_price - position.actual_entry) * shares, 2)

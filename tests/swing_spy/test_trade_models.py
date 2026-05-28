@@ -9,6 +9,7 @@ from pydantic import ValidationError
 
 from swing_spy.trade_models import (
     CandidateSnapshot,
+    ClosedTrade,
     ClosePositionInput,
     ExecutionInput,
     OpenPosition,
@@ -72,6 +73,51 @@ def test_gross_pnl_uses_actual_values() -> None:
     )
 
     assert gross_pnl(position, exit_price=492.0, shares=10) == 240.0
+
+
+def test_gross_pnl_rejects_invalid_share_count() -> None:
+    position = OpenPosition(
+        id=1,
+        candidate_id=7,
+        ticker="MUV2.DE",
+        currency="EUR",
+        shares=10,
+        actual_entry=468.0,
+        stop=458.0,
+        target=492.0,
+        opened_at=_dt(),
+        planned_entry=470.0,
+        planned_shares=9,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match=r"Shares must be between 1 and the open position share count\.",
+    ):
+        gross_pnl(position, exit_price=492.0, shares=0)
+
+    with pytest.raises(
+        ValueError,
+        match=r"Shares must be between 1 and the open position share count\.",
+    ):
+        gross_pnl(position, exit_price=492.0, shares=position.shares + 1)
+
+
+def test_closed_trade_rejects_exit_before_open() -> None:
+    with pytest.raises(ValidationError, match=r"Exit time cannot be before open time\."):
+        ClosedTrade(
+            position_id=1,
+            candidate_id=7,
+            ticker="MUV2.DE",
+            currency="EUR",
+            shares=10,
+            entry_price=468.0,
+            exit_price=492.0,
+            opened_at=_dt(),
+            exited_at=datetime(2026, 5, 28, 11, 0, tzinfo=UTC),
+            exit_reason="TARGET",
+            gross_pnl=240.0,
+        )
 
 
 def _dt() -> datetime:
