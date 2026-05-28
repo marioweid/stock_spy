@@ -13,10 +13,14 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from swing_spy.analysis import build_agent
 from swing_spy.config import Secrets
+from swing_spy.dashboard_candidates import candidate_to_snapshot
 from swing_spy.history import download_history
 from swing_spy.models import SwingConfig
+from swing_spy.report import Candidate
 from swing_spy.scanner import Scanner
 from swing_spy.store import Store
+from swing_spy.trade_lifecycle import TradeLifecycleService
+from swing_spy.trade_store import TradeStore
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +31,12 @@ _HTTP_TIMEOUT = 30.0
 async def build_scanner(config: SwingConfig, secrets: Secrets) -> AsyncIterator[Scanner]:
     """Construct a fully wired scanner, cleaning up the store and HTTP client on exit."""
     store = Store(config.db_path)
+    trade_store = TradeStore(config.db_path)
+    trade_service = TradeLifecycleService(trade_store)
+
+    def record_dashboard_candidate(candidate: Candidate) -> None:
+        trade_service.record_candidate(candidate_to_snapshot(candidate))
+
     try:
         agent = build_agent(secrets.gemini_api_key, config.gemini_model)
         async with httpx.AsyncClient(timeout=_HTTP_TIMEOUT) as client:
@@ -37,8 +47,10 @@ async def build_scanner(config: SwingConfig, secrets: Secrets) -> AsyncIterator[
                 client,
                 telegram_token=secrets.telegram_bot_token,
                 telegram_chat_id=secrets.telegram_chat_id,
+                record_dashboard_candidate=record_dashboard_candidate,
             )
     finally:
+        trade_store.close()
         store.close()
 
 
@@ -80,4 +92,6 @@ async def run_check(config: SwingConfig, secrets: Secrets, ticker: str) -> str:
         if evaluated is None:
             return f"{ticker}: no clean swing setup right now."
         candidate = await scanner.build_candidate(evaluated)
+        if scanner.record_dashboard_candidate is not None:
+            scanner.record_dashboard_candidate(candidate)
         return await scanner.send_candidate(candidate)
