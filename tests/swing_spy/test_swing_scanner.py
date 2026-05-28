@@ -92,6 +92,19 @@ async def test_setup_sends_one_alert_with_report(store: Store) -> None:
     assert store.alert_count("AAA") == 1
 
 
+async def test_new_setup_records_dashboard_candidate(store: Store) -> None:
+    sender = _Recorder()
+    recorded = []
+    scanner = _make_scanner(store, technicals=_PULLBACK, sender=sender)
+    scanner.record_dashboard_candidate = recorded.append
+
+    sent = await scanner.run_cycle()
+
+    assert sent == 1
+    assert len(recorded) == 1
+    assert recorded[0].quote.ticker == "AAA"
+
+
 async def test_same_setup_is_not_realerted(store: Store) -> None:
     sender = _Recorder()
     scanner = _make_scanner(store, technicals=_PULLBACK, sender=sender)

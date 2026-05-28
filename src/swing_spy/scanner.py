@@ -45,6 +45,7 @@ NewsFn = Callable[[str], list[NewsItem]]
 EarningsFn = Callable[[str], EarningsInfo]
 AnalyzeFn = Callable[..., Awaitable[SwingNote]]
 SendFn = Callable[..., Awaitable[None]]
+DashboardRecordFn = Callable[[Candidate], None]
 
 
 @dataclass(frozen=True)
@@ -80,6 +81,7 @@ class Scanner:
         analyze: AnalyzeFn = default_analyze,
         send_message: SendFn = default_send_message,
         send_document: SendFn = default_send_document,
+        record_dashboard_candidate: DashboardRecordFn | None = None,
     ) -> None:
         self._config = config
         self._store = store
@@ -94,6 +96,7 @@ class Scanner:
         self._analyze = analyze
         self._send_message = send_message
         self._send_document = send_document
+        self.record_dashboard_candidate = record_dashboard_candidate
 
     async def run_cycle(self) -> int:
         """Scan the whole universe once and return the number of candidate alerts sent."""
@@ -146,6 +149,8 @@ class Scanner:
             return 0
 
         candidate = await self.build_candidate(s)
+        if self.record_dashboard_candidate is not None:
+            self.record_dashboard_candidate(candidate)
         await self.send_candidate(candidate)
         self._store.record_alert(ticker, signature, candidate.setup.kind)
         logger.info("Alerted swing candidate %s (%s)", ticker, candidate.setup.kind)

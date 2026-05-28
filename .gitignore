@@ -12,6 +12,8 @@ wheels/
 # Secrets and local state
 .env
 data/
+.superpowers/
+.worktrees/
 
 swing_config.toml
 signal_config.toml

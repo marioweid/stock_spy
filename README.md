@@ -57,6 +57,10 @@ uv run signal-spy report AAPL          # full one-off report for a ticker
 uv run swing-spy scan --once           # one scan, then exit
 uv run swing-spy scan                  # poll on an interval
 uv run swing-spy check MUV2.DE         # evaluate a single ticker now
+
+# Swing dashboard
+uv run swing-spy scan --once           # persist candidate snapshots first
+uv run streamlit run src/swing_spy/streamlit_app/app.py
 ```
 
 With Docker (recommended for always-on) — runs both services from one image:
