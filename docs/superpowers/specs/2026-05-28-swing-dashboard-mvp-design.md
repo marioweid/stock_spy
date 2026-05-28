@@ -43,10 +43,12 @@ calculations.
 
 Proposed modules:
 
-- `swing_spy.dashboard_app`
-  - Streamlit pages and components only.
+- `swing_spy/streamlit_app/`
+  - Dedicated folder for all Streamlit-specific code.
+  - Contains the app entrypoint, page modules, UI components, and Streamlit-only helpers.
   - Calls service methods with user input.
   - Renders returned models.
+  - Does not expose business logic that other frontends would need.
 - `swing_spy.trade_lifecycle`
   - Candidate and position lifecycle service.
   - Executes candidates, skips candidates, evaluates position status, and closes positions.
@@ -65,6 +67,9 @@ service.execute_candidate(candidate_id, actual_entry, shares, executed_at)
 service.close_position(position_id, exit_price, shares, exit_reason)
 service.list_open_positions()
 ```
+
+The repo should keep this separation physically visible. Streamlit imports services, but services
+must not import Streamlit.
 
 ## Candidate Cards
 
