@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
+import pytest
+
 from swing_spy.trade_models import CandidateSnapshot, ClosePositionInput, ExecutionInput
 from swing_spy.trade_store import TradeStore
 
@@ -75,6 +77,34 @@ def test_close_position_writes_closed_trade_and_removes_open_position() -> None:
     assert closed.gross_pnl == 240.0
     assert store.list_open_positions() == []
     assert store.list_closed_trades()[0].exit_reason == "TARGET"
+    store.close()
+
+
+def test_close_position_rejects_partial_share_count() -> None:
+    store = TradeStore(":memory:")
+    candidate_id = store.upsert_candidate(_candidate())
+    position = store.create_open_position(
+        candidate_id,
+        ExecutionInput(actual_entry=468.0, shares=10, executed_at=_dt()),
+    )
+
+    assert position.id is not None
+    with pytest.raises(
+        ValueError,
+        match=r"Closing share count must match the open position share count\.",
+    ):
+        store.close_position(
+            position.id,
+            ClosePositionInput(
+                exit_price=492.0,
+                shares=9,
+                exited_at=_dt() + timedelta(days=5),
+                exit_reason="TARGET",
+            ),
+        )
+
+    assert [p.id for p in store.list_open_positions()] == [position.id]
+    assert store.list_closed_trades() == []
     store.close()
 
 

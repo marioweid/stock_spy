@@ -232,6 +232,8 @@ class TradeStore:
         position = self._get_open_position(position_id)
         if position is None:
             raise ValueError(f"Position {position_id} is not open.")
+        if close_input.shares != position.shares:
+            raise ValueError("Closing share count must match the open position share count.")
 
         pnl = gross_pnl(
             position,
